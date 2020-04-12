@@ -12,26 +12,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.products.domain.Product;
+import com.ms.products.domain.ProductDto;
 import com.ms.products.repository.ProductRepository;
+import com.ms.products.service.ProductService;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-	
+
 	@Autowired
 	ProductRepository productRepository;
-	
+
+	@Autowired
+	ProductService service;
+
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Product> save(@RequestBody Product product) {
 		return new ResponseEntity<Product>(productRepository.save(product), HttpStatus.OK);
 	}
-	
-	@GetMapping
-	public List<Product> findAll() {
-		return productRepository.findAll();
-		
+
+	@GetMapping(produces = "application/json")
+	public List<ProductDto> findAll() {
+		return service.findAll();
 	}
-	
-	
-     
 }

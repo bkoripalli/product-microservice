@@ -1,0 +1,24 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+logging:
+  level:
+    org:
+      springframework:
+        data: debug
+server:
+  port: 8082
+  
+spring:
+  datasource:
+    password: ${PRODUCT_DB_PASSWORD}
+    url: jdbc:mysql://${PRODUCT_DB_IP}:${PRODUCT_DB_PORT}/product_db
+    username: ${PRODUCT_DB_USERNAME}
+  application:
+    name: product-service
+    
+
+ribbon:
+  eureka:
+    enabled: true
