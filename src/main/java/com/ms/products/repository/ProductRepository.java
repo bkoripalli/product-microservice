@@ -50,6 +50,16 @@ public class ProductRepository {
 		product.setId(newUserId);
 		return product;
 	}
+	
+	public Product getProdcut(long productId) {
+		System.out.println(Thread.currentThread().getName());
+		return jdbcTemplate.queryForObject("select * from products where id = ?", new Object[] { productId },
+				(rs, rowNum) -> {
+					return new Product(rs.getLong("id"), rs.getString("name"), rs.getDouble("price"),
+							rs.getString("category"), fromXml(rs.getString("specs")));
+
+				});
+	}
 
 	public int deleteById(Long productId) {
 		return jdbcTemplate.update("delete products where id = ?", productId);

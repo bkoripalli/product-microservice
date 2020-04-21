@@ -1,11 +1,13 @@
 package com.ms.products.controller;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +36,10 @@ public class ProductController {
 	@GetMapping(produces = "application/json")
 	public List<ProductDto> findAll() {
 		return service.findAll();
+	}
+	
+	@GetMapping(path = "{productId}", produces = "application/json")
+	public CompletableFuture<ProductDto> getProduct(@PathVariable("productId") long productId) {
+		return service.getProduct(productId);
 	}
 }

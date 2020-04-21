@@ -3,9 +3,9 @@ package com.ms.products.service;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,7 +15,6 @@ import com.ms.products.domain.Product;
 import com.ms.products.domain.ProductDto;
 import com.ms.products.domain.Review;
 import com.ms.products.repository.ProductRepository;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 @Service
 public class ProductService {
@@ -38,6 +37,17 @@ public class ProductService {
 			productWithReviews.add(dto);
 		}
 		return productWithReviews;
+	}
+
+	public CompletableFuture<ProductDto> getProduct(long productId) {
+		return CompletableFuture.supplyAsync(() -> produtDao.getProdcut(productId)).thenApply(product -> {
+			System.out.println(Thread.currentThread().getName());
+			ProductDto dto = new ProductDto();
+			dto.setProduct(product);
+			dto.setReviews(fectchReviews(productId));
+			return dto;
+		});
+
 	}
 
 	private List<Review> fectchReviews(long id) {
