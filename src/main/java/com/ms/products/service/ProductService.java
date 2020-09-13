@@ -15,6 +15,7 @@ import com.ms.products.domain.Product;
 import com.ms.products.domain.ProductDto;
 import com.ms.products.domain.Review;
 import com.ms.products.repository.ProductRepository;
+import com.sun.el.stream.Stream;
 
 @Service
 public class ProductService {
@@ -25,13 +26,16 @@ public class ProductService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public List<ProductDto> findAll() {
+	public CompletableFuture<Product> save(Product product) {
+		return CompletableFuture.supplyAsync(() -> produtDao.save(product));
+	}
+
+	public List<ProductDto> getProductWithReview() {
 		List<ProductDto> productWithReviews = new ArrayList<ProductDto>();
 		List<Product> products = produtDao.findAll();
 
 		for (Product product : products) {
 			ProductDto dto = new ProductDto();
-
 			dto.setProduct(product);
 			dto.setReviews(fectchReviews(product.getId()));
 			productWithReviews.add(dto);
@@ -39,12 +43,17 @@ public class ProductService {
 		return productWithReviews;
 	}
 
+	public List<Product> findAll() {
+		return produtDao.findAll();
+	}
+
 	public CompletableFuture<ProductDto> getProduct(long productId) {
 		return CompletableFuture.supplyAsync(() -> produtDao.getProdcut(productId)).thenApply(product -> {
-			System.out.println(Thread.currentThread().getName());
 			ProductDto dto = new ProductDto();
 			dto.setProduct(product);
-			dto.setReviews(fectchReviews(productId));
+			List<Review> reviews = fectchReviews(productId);
+			product.setRating(reviews.stream().mapToDouble(Review::getRating).average().getAsDouble());
+			dto.setReviews(reviews);
 			return dto;
 		});
 
@@ -65,5 +74,9 @@ public class ProductService {
 
 	public List<Review> reliable(long id) {
 		return new ArrayList<Review>(1);
+	}
+	
+	public void update(Product product) {
+		produtDao.update(product);
 	}
 }

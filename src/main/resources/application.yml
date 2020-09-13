@@ -8,15 +8,15 @@ logging:
       springframework:
         data: debug
 server:
-  port: 8082
+  port: ${PRODUCT_SERVICE_PORT:8082}
   
 spring:
   datasource:
-    password: ${PRODUCT_DB_PASSWORD}
-    url: jdbc:mysql://${PRODUCT_DB_IP}:${PRODUCT_DB_PORT}/product_db
-    username: ${PRODUCT_DB_USERNAME}
+    password: ${PRODUCT_DB_PASSWORD:password}
+    url: jdbc:mysql://${PRODUCT_DB_IP:192.168.99.101}:${PRODUCT_DB_PORT:31093}/${PRODUCT_DB_SCHEMA:product_db}
+    username: ${PRODUCT_DB_USERNAME:root}
   application:
-    name: product-service
+    name: ${APP_NAME:product-service}
     
 
 ribbon:

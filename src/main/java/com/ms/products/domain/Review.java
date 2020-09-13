@@ -10,17 +10,19 @@ public class Review {
 	User reviewer;
 	String description;
 	boolean helpful;
+	int rating;
 
 	public Review() {
 		super();
 	}
 
-	public Review(Integer id, User reviewer, String description, boolean helpful) {
+	public Review(Integer id, User reviewer, String description, boolean helpful, int rating) {
 		super();
 		this.id = id;
 		this.reviewer = reviewer;
 		this.description = description;
 		this.helpful = helpful;
+		this.rating = rating;
 	}
 
 	public long getId() {
@@ -65,8 +67,16 @@ public class Review {
 
 	@Override
 	public String toString() {
-		return "Review [id=" + id + ", reviewer=" + reviewer + ", description=" + description + ", helpful=" + helpful
-				+ "]";
+		return "Review [id=" + id + ", productId=" + productId + ", reviewer=" + reviewer + ", description="
+				+ description + ", helpful=" + helpful + ", rating=" + rating + "]";
+	}
+
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
 	}
 
 }
